@@ -9,6 +9,9 @@
 # production
 /build
 
+# credential
+/src/config/
+
 # misc
 .idea
 .DS_Store
