@@ -4,24 +4,62 @@ import './App.css';
 import { RecipeList } from './components/RecipeList';
 import { APP_ID, APP_KEY } from './config/';
 
+const ErrorMessage = ({message, searchTerm}) => {
+  return (
+    <div>{ message }</div>
+  );
+};
+
 class App extends Component {
   constructor(){
     super();
     this.state = {
       searchTerm: 'cake',
-      recipes: []
+      recipes: {
+        fetchedList: [],
+        errorMessage: ''
+      },
+      isLoading: false
     }
   }
 
   fetchRecipes = (url) => {
+    this.setState({
+      isLoading: true
+    });
+
     fetch(url)
     .then(res => res.json())
     .then(recipes => {
-      const data = recipes.hits.map(({recipe}) => {
-        return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
-      });
+      if(recipes.hits.length > 0) {
+        const data = recipes.hits.map(({recipe}) => {
+          return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
+        });
+        this.setState({
+          recipes: {
+            fetchedList: data,
+            errorMessage: []
+          },
+          isLoading: false
+        });
+      } else {
+        this.setState({
+          recipes: {
+            fetchedList: [],
+            errorMessage: `Sorry. We cannot find recipes of ${this.state.searchTerm}. Please search for another food item.`
+          },
+          isLoading: false
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
       this.setState({
-        recipes: data
+        recipes: {
+          fetchedList: [],
+          errorMessage: 'Oops...Failed to load recipes. Please let us know what went wrong!'
+        },
+        isLoading: false
       });
     });
   };
@@ -34,7 +72,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <RecipeList recipes={this.state.recipes} />
+        {
+          this.state.recipes.fetchedList.length > 0 ?
+          <RecipeList recipes={this.state.recipes.fetchedList} /> :
+          <ErrorMessage message={this.state.recipes.errorMessage} />
+        }
       </div>
     );
   }
