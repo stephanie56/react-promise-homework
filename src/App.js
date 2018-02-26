@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-const CakeList = ({cakes}) => {
-  return(
-    <ul>
-      {
-        cakes.map((cake) => <li key={cake}>{cake}</li>)
-      }
-    </ul>
-  );
-};
+import { CakeList } from './components/List';
+import { APP_ID, APP_KEY } from './config/';
 
 class App extends Component {
   constructor(){
@@ -21,18 +13,14 @@ class App extends Component {
   }
 
   fetchRecipes = () => {
-    fetch('https://api.edamam.com/api/food-database/parser?ingr=red%20apple&app_id=431230dd&app_key=064d85707c2fd24bca1422720f7a9274', {
-  	// method: 'POST',
-    mode: 'no-cors',
-  	headers: {
-		'Content-Type': 'application/json'
-      },
-    })
+    fetch(`https://api.edamam.com/search?q=cake&app_id=${APP_ID}&app_key=${APP_KEY}`)
     .then(res => res.json())
     .then(recipes => {
-      console.log('fetched ', recipes);
+      const data = recipes.hits.map(({recipe}) => {
+        return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
+      });
       this.setState({
-        cakes: recipes
+        cakes: data
       });
     });
   };
@@ -44,7 +32,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <CakeList cakes={this.state.cakes}/>
+        <CakeList cakes={this.state.cakes} />
       </div>
     );
   }
