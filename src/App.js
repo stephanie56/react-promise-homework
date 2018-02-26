@@ -4,9 +4,13 @@ import './App.css';
 import { RecipeList } from './components/RecipeList';
 import { APP_ID, APP_KEY } from './config/';
 
-const ErrorMessage = ({message, searchTerm}) => {
+const ErrorMessage = ({message, isLoading}) => {
   return (
-    <div>{ message }</div>
+    <div>
+      {
+        isLoading ? "Loading recipes..." : message
+      }
+    </div>
   );
 };
 
@@ -75,7 +79,10 @@ class App extends Component {
         {
           this.state.recipes.fetchedList.length > 0 ?
           <RecipeList recipes={this.state.recipes.fetchedList} /> :
-          <ErrorMessage message={this.state.recipes.errorMessage} />
+          <ErrorMessage
+            isLoading={this.state.isLoading}
+            message={this.state.recipes.errorMessage}
+          />
         }
       </div>
     );
