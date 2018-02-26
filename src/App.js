@@ -21,19 +21,13 @@ class App extends Component {
   }
 
   fetchRecipes = () => {
-    fetch('https://api.edamam.com/api/food-database/parser?ingr=red%20apple&app_id=431230dd&app_key=064d85707c2fd24bca1422720f7a9274', {
-  	// method: 'POST',
-    mode: 'no-cors',
-  	headers: {
-		'Content-Type': 'application/json'
-      },
-    })
+    fetch('https://api.edamam.com/search?q=cake&app_id=${APP_ID}&app_key=${APP_KEY}')
     .then(res => res.json())
     .then(recipes => {
-      console.log('fetched ', recipes);
-      this.setState({
-        cakes: recipes
+      const data = recipes.hits.map(({recipe}) => {
+        return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
       });
+      console.log('Fecthing...', data);
     });
   };
 
