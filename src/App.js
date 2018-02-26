@@ -1,38 +1,40 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import { CakeList } from './components/List';
+import { RecipeList } from './components/RecipeList';
 import { APP_ID, APP_KEY } from './config/';
 
 class App extends Component {
   constructor(){
     super();
     this.state = {
-      cakes: []
+      searchTerm: 'cake',
+      recipes: []
     }
   }
 
-  fetchRecipes = () => {
-    fetch(`https://api.edamam.com/search?q=cake&app_id=${APP_ID}&app_key=${APP_KEY}`)
+  fetchRecipes = (url) => {
+    fetch(url)
     .then(res => res.json())
     .then(recipes => {
       const data = recipes.hits.map(({recipe}) => {
         return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
       });
       this.setState({
-        cakes: data
+        recipes: data
       });
     });
   };
 
   componentDidMount(){
-    this.fetchRecipes();
+    const BASE_ENDPOINT = `https://api.edamam.com/search?q=${this.state.searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}`;
+    this.fetchRecipes(BASE_ENDPOINT);
   }
 
   render() {
     return (
       <div className="App">
-        <CakeList cakes={this.state.cakes} />
+        <RecipeList recipes={this.state.recipes} />
       </div>
     );
   }

@@ -1,10 +1,10 @@
 import React from 'react';
 
-export const CakeList = ({cakes}) => {
+export const RecipeList = ({recipes}) => {
   return(
     <ul>
       {
-        cakes.map(({name, calories}, idx) => {
+        recipes.map(({name, calories}, idx) => {
           return (
             <li key={idx}>
               <h3>{name}</h3>
