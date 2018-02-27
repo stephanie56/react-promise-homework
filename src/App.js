@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { RecipeList } from './components/RecipeList';
+import { SearchBar } from './components/SearchBar';
+
 import { APP_ID, APP_KEY } from './config/';
 
 const ErrorMessage = ({message, isLoading}) => {
@@ -27,6 +29,18 @@ class App extends Component {
     }
   }
 
+  updateSearchTerm = (e) => {
+    this.setState({
+      searchTerm: e.target.value
+    });
+    console.log(this.state.searchTerm);
+  }
+
+  onClickSearch = (e) => {
+    e.preventDefault();
+    this.fetchRecipes(this.state.searchTerm);
+  }
+
   fetchRecipes = (searchTerm) => {
     const BASE_ENDPOINT = `https://api.edamam.com/search?q=${searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}`;
 
@@ -42,6 +56,7 @@ class App extends Component {
           return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
         });
         this.setState({
+          searchTerm: '',
           recipes: {
             fetchedList: data,
             errorMessage: []
@@ -77,6 +92,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <SearchBar
+          inputValue={this.state.searchTerm}
+          updateSearchTerm={this.updateSearchTerm}
+          onClickSearch={this.onClickSearch}
+        />
         {
           this.state.recipes.fetchedList.length > 0 ?
           <RecipeList recipes={this.state.recipes.fetchedList} /> :

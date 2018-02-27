@@ -4,6 +4,22 @@
   padding: 0;
 }
 
+input[type="text"], input[type="submit"], button {
+  appearance: none;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  outline: none;
+  border: 2px solid #ee4e7a;
+  border-radius: 4px;
+  margin-right: 0.4rem;
+}
+
+input[type="submit"], button {
+  background-color: #ee4e7a;
+  color: #fff;
+  cursor: pointer;
+}
+
 .error-message {
   display: flex;
   justify-content: center;
@@ -11,6 +27,13 @@
   min-height: 600px;
   font-size: 1.4rem;
   color: #444;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
 }
 
 .list {
@@ -27,6 +50,7 @@
   padding: 1rem 1.6rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: #444;
 }
 
