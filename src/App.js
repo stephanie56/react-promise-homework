@@ -20,7 +20,7 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      searchTerm: 'cake',
+      searchTerm: '',
       recipes: {
         fetchedList: [],
         errorMessage: ''
@@ -33,7 +33,6 @@ class App extends Component {
     this.setState({
       searchTerm: e.target.value
     });
-    console.log(this.state.searchTerm);
   }
 
   onClickSearch = (e) => {
@@ -53,7 +52,12 @@ class App extends Component {
     .then(recipes => {
       if(recipes.hits.length > 0) {
         const data = recipes.hits.map(({recipe}) => {
-          return Object.assign({}, {name: recipe.label, calories: Math.floor(recipe.calories)});
+          return Object.assign({}, {
+            name: recipe.label,
+            calories: Math.floor(recipe.calories),
+            image: recipe.image,
+            url: recipe.url
+          });
         });
         this.setState({
           searchTerm: '',
@@ -86,7 +90,7 @@ class App extends Component {
   };
 
   componentDidMount(){
-    this.fetchRecipes(this.state.searchTerm);
+    this.fetchRecipes('cake');
   }
 
   render() {
