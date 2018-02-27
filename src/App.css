@@ -4,6 +4,11 @@
   padding: 0;
 }
 
+body {
+  font-family: sans-serif;
+}
+
+
 input[type="text"], input[type="submit"], button {
   appearance: none;
   padding: 0.6rem 1rem;
