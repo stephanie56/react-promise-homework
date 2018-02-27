@@ -6,7 +6,7 @@ import { APP_ID, APP_KEY } from './config/';
 
 const ErrorMessage = ({message, isLoading}) => {
   return (
-    <div>
+    <div className="error-message">
       {
         isLoading ? "Loading recipes..." : message
       }
@@ -27,12 +27,14 @@ class App extends Component {
     }
   }
 
-  fetchRecipes = (url) => {
+  fetchRecipes = (searchTerm) => {
+    const BASE_ENDPOINT = `https://api.edamam.com/search?q=${searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}`;
+
     this.setState({
       isLoading: true
     });
 
-    fetch(url)
+    fetch(BASE_ENDPOINT)
     .then(res => res.json())
     .then(recipes => {
       if(recipes.hits.length > 0) {
@@ -46,7 +48,8 @@ class App extends Component {
           },
           isLoading: false
         });
-      } else {
+      }
+      else {
         this.setState({
           recipes: {
             fetchedList: [],
@@ -57,7 +60,6 @@ class App extends Component {
       }
     })
     .catch(err => {
-      console.log(err);
       this.setState({
         recipes: {
           fetchedList: [],
@@ -69,8 +71,7 @@ class App extends Component {
   };
 
   componentDidMount(){
-    const BASE_ENDPOINT = `https://api.edamam.com/search?q=${this.state.searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}`;
-    this.fetchRecipes(BASE_ENDPOINT);
+    this.fetchRecipes(this.state.searchTerm);
   }
 
   render() {
